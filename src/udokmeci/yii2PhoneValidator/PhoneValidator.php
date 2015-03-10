@@ -5,6 +5,7 @@ use yii\validators\Validator;
 use libphonenumber\PhoneNumberUtil;
 use libphonenumber\PhoneNumberFormat;
 use libphonenumber\NumberParseException;
+use Exception;
 
 
 /**
@@ -69,6 +70,9 @@ class PhoneValidator extends Validator
 
         } catch (NumberParseException $e) {
         	$this->addError($model, $attribute, \Yii::t('app','Unexpected Phone Number Format'));
-        }  
+        } 
+        catch (Exception $e) {
+            $this->addError($model, $attribute, \Yii::t('app','Unexpected Phone Number Format or Country Code'));
+        }   
     }
 }
