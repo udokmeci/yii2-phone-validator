@@ -70,8 +70,7 @@ class PhoneValidator extends Validator
 
         } catch (NumberParseException $e) {
         	$this->addError($model, $attribute, \Yii::t('app','Unexpected Phone Number Format'));
-        } 
-        catch (Exception $e) {
+        } catch (Exception $e) {
             $this->addError($model, $attribute, \Yii::t('app','Unexpected Phone Number Format or Country Code'));
         }   
     }
