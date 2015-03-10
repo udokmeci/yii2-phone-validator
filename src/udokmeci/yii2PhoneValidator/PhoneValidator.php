@@ -19,8 +19,8 @@ use libphonenumber\NumberParseException;
 class PhoneValidator extends Validator
 {
     public $strict=true;
-    public $countryAttribute="";
-    public $country="";
+    public $countryAttribute;
+    public $country;
     public $format=true;
 
     public function validateAttribute($model, $attribute)
