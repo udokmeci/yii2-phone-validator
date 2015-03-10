@@ -23,6 +23,8 @@ $> composer update
 
 ##Configuration
 Now add following in to your `model` rules. 
+###Note: ISO 3166-1 alpha-2 codes are required for country attribute. You can use [db-regions](https://github.com/udokmeci/db-regions) for countries list.
+
 ``` php
     /**
      * @inheritdoc
@@ -52,4 +54,5 @@ The `country` and `country_code` attributes are tried if `country` or `countryAt
   [['phone'], 'udokmeci\yii2PhoneValidator\PhoneValidator','countryAttribute'=>'country_code','strict'=>false,'format'=>true],  
 
 ```
+
 Any forks are welcome.
