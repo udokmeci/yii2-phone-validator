@@ -11,7 +11,7 @@ Just add the line under `require` object in your `composer.json` file.
 ``` json
 {
   "require": {
-    "udokmeci/yii2-phone-validator" : "dev-master"
+    "udokmeci/yii2-phone-validator" : "~1.0.1"
   }
 }
 ```
