@@ -52,7 +52,7 @@ class PhoneValidator extends Validator
 
         // if none and strict
         if (!isset($country) && $this->strict) {
-            $this->addError($model, $attribute, \Yii::t('app', 'For phone validation country required'));
+            $this->addError($model, $attribute, \Yii::t('udokmeci.phone.validator', 'For phone validation country required'));
             return false;
         }
 
@@ -69,13 +69,13 @@ class PhoneValidator extends Validator
                 }
                 return true;
             } else {
-                $this->addError($model, $attribute, \Yii::t('app', 'Phone number does not seem to be a valid phone number'));
+                $this->addError($model, $attribute, \Yii::t('udokmeci.phone.validator', 'Phone number does not seem to be a valid phone number'));
                 return false;
             }
         } catch (NumberParseException $e) {
-            $this->addError($model, $attribute, \Yii::t('app', 'Unexpected Phone Number Format'));
+            $this->addError($model, $attribute, \Yii::t('udokmeci.phone.validator', 'Unexpected Phone Number Format'));
         } catch (Exception $e) {
-            $this->addError($model, $attribute, \Yii::t('app', 'Unexpected Phone Number Format or Country Code'));
+            $this->addError($model, $attribute, \Yii::t('udokmeci.phone.validator', 'Unexpected Phone Number Format or Country Code'));
         }
     }
 
