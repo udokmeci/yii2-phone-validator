@@ -20,7 +20,7 @@
     "require": {
         "php": ">=8.1.0",
         "yiisoft/yii2": "^2.0.40",
-        "giggsey/libphonenumber-for-php": "^8.13"
+        "giggsey/libphonenumber-for-php": "^9.0"
     },
     "repositories": [
         {
