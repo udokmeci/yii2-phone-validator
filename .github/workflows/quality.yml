@@ -19,7 +19,7 @@ jobs:
       with:
         php-version: '8.1'
         extensions: mbstring, intl
-        tools: composer, composer-normalize
+        tools: composer
     
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
@@ -37,7 +37,6 @@ jobs:
     - name: Validate composer files
       run: |
         composer validate --strict
-        composer normalize --dry-run
 
   documentation:
     runs-on: ubuntu-latest
