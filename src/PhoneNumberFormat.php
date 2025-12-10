@@ -55,8 +55,6 @@ enum PhoneNumberFormat: int
                 return LibPhoneNumberFormat::NATIONAL;
             case self::RFC3966:
                 return LibPhoneNumberFormat::RFC3966;
-            default:
-                throw new \InvalidArgumentException('Invalid phone number format');
         }
     }
 }
