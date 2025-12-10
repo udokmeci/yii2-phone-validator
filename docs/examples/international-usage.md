@@ -60,7 +60,11 @@ class PhoneHelper
             $numberProto = $phoneUtil->parse($phone, $country);
             
             if ($phoneUtil->isValidNumber($numberProto)) {
-                return $phoneUtil->format($numberProto, $format);
+                // Convert enum to integer if necessary
+                $formatValue = is_object($format) && method_exists($format, 'toLibPhoneNumberFormat')
+                    ? $format->toLibPhoneNumberFormat()
+                    : $format;
+                return $phoneUtil->format($numberProto, $formatValue);
             }
         } catch (\Exception $e) {
             // Return original on error
