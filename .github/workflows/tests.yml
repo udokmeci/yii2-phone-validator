@@ -12,8 +12,8 @@ jobs:
     
     strategy:
       matrix:
-        php-version: ['8.1', '8.2', '8.3']
-        yii-version: ['~2.0.40', '~2.0.45']
+        php-version: ['8.1', '8.2', '8.3', '8.4']
+        yii-version: ['~2.0.40', '~2.0.45', '~2.0.51']
     
     name: PHP ${{ matrix.php-version }} - Yii ${{ matrix.yii-version }}
     
@@ -58,7 +58,7 @@ jobs:
       run: vendor/bin/phpcs src/ --standard=PSR12 --ignore=messages
     
     - name: Upload coverage to Codecov
-      if: matrix.php-version == '8.1' && matrix.yii-version == '~2.0.45'
+      if: matrix.php-version == '8.1' && matrix.yii-version == '~2.0.51'
       uses: codecov/codecov-action@v4
       with:
         file: ./coverage.xml
