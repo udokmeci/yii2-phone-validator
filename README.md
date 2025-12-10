@@ -1,58 +1,145 @@
-yii2-phone-validator
-==============
+# Yii2 Phone Validator
 
-Yii2 phone validator is a validator uses phone number util to validate and format the phone number attribute of model.
+[![Tests](https://github.com/udokmeci/yii2-phone-validator/workflows/Tests/badge.svg)](https://github.com/udokmeci/yii2-phone-validator/actions)
+[![Code Quality](https://github.com/udokmeci/yii2-phone-validator/workflows/Code%20Quality/badge.svg)](https://github.com/udokmeci/yii2-phone-validator/actions)
+[![Latest Stable Version](https://poser.pugx.org/udokmeci/yii2-phone-validator/v/stable)](https://packagist.org/packages/udokmeci/yii2-phone-validator)
+[![Total Downloads](https://poser.pugx.org/udokmeci/yii2-phone-validator/downloads)](https://packagist.org/packages/udokmeci/yii2-phone-validator)
+[![License](https://poser.pugx.org/udokmeci/yii2-phone-validator/license)](https://packagist.org/packages/udokmeci/yii2-phone-validator)
+[![PHP Version](https://img.shields.io/badge/php-%5E8.1-blue)](https://php.net/)
 
+Yii2 phone number validator extension using Google's libphonenumber library.
 
-How to use?
-==============
-##Installation with Composer
-Just add the line under `require` object in your `composer.json` file.
-``` json
+## Installation
+
+```bash
+composer require udokmeci/yii2-phone-validator
+```
+
+## Usage
+
+### Basic Validation
+
+```php
+use udokmeci\yii2PhoneValidator\PhoneValidator;
+
+class Contact extends ActiveRecord
 {
-  "require": {
-    "udokmeci/yii2-phone-validator" : "~1.0.4"
-  }
-}
-```
-then run 
-
-``` console
-$> composer update
-```
-
-##Configuration
-Now add following in to your `model` rules. 
-###Note: ISO 3166-1 alpha-2 codes are required for country attribute. You can use [db-regions](https://github.com/udokmeci/db-regions) for countries list.
-
-``` php
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
-          [['name', 'country'], 'string', 'max' => 50],
-          // add this line
-          [['phone'], 'udokmeci\yii2PhoneValidator\PhoneValidator'],
+            [['phone'], PhoneValidator::class, 'country' => 'NL'],
         ];
     }
-```
-##Advanced
-The `country` and `country_code` attributes are tried if `country` or `countryAttribute` is not specified.
-
-``` php
-  // All phones will be controlled according to Turkey and formatted to TR Phone Number
-  [['phone'], 'udokmeci\yii2PhoneValidator\PhoneValidator','country'=>'TR'],// 
-
-  //All phones will be controlled according to value of $model->country_code
-  [['phone'], 'udokmeci\yii2PhoneValidator\PhoneValidator','countryAttribute'=>'country_code'],
-
-  //All phones will be controlled according to value of $model->country_code
-  //If model has not a country attribute then phone will not be validated
-  //If phone is a valid one will be formatted for International Format. default behavior.
-  [['phone'], 'udokmeci\yii2PhoneValidator\PhoneValidator','countryAttribute'=>'country_code','strict'=>false,'format'=>true],  
-
+}
 ```
 
-Any forks are welcome.
+### Using Format Enum
+
+```php
+use udokmeci\yii2PhoneValidator\PhoneValidator;
+use udokmeci\yii2PhoneValidator\PhoneNumberFormat;
+
+// Modern PHP 8.1+ enum usage
+public function rules()
+{
+    return [
+        [['phone'], PhoneValidator::class, 
+            'country' => 'NL',
+            'format' => PhoneNumberFormat::E164        // Enum case
+        ],
+        [['mobile'], PhoneValidator::class,
+            'country' => 'NL', 
+            'format' => PhoneNumberFormat::INTERNATIONAL // Enum case
+        ],
+    ];
+}
+```
+
+### Dynamic Country Detection
+
+```php
+public function rules()
+{
+    return [
+        [['phone'], PhoneValidator::class, 'countryAttribute' => 'country_code'],
+    ];
+}
+```
+
+### Custom Formatting
+
+```php
+use udokmeci\yii2PhoneValidator\PhoneNumberFormat;
+
+public function rules()
+{
+    return [
+        [['phone'], PhoneValidator::class, 
+            'country' => 'NL',
+            'format' => PhoneNumberFormat::E164  // Using enum
+        ],
+    ];
+}
+```
+
+## Configuration
+
+| Property | Description | Default |
+|----------|-------------|---------|
+| `country` | Fixed country code (ISO 3166-1 alpha-2) | `null` |
+| `countryAttribute` | Model attribute containing country code | `null` |
+| `strict` | Require country for validation | `true` |
+| `format` | Output format | `INTERNATIONAL` |
+
+## Format Options
+
+| Format | Example Output |
+|--------|----------------|
+| `PhoneNumberFormat::E164` | `+31612345678` |
+| `PhoneNumberFormat::INTERNATIONAL` | `+31 6 12345678` |
+| `PhoneNumberFormat::NATIONAL` | `06 12345678` |
+| `PhoneNumberFormat::RFC3966` | `tel:+31-6-12345678` |
+| `false` | No formatting |
+
+**Note:** `PhoneNumberFormat` is a modern PHP 8.1+ enum. Import: `use udokmeci\yii2PhoneValidator\PhoneNumberFormat;`
+
+## Examples
+
+### Netherlands Phone
+```php
+// Input: '0612345678'
+// Output: '+31 6 12345678'
+```
+
+### US Phone
+```php
+[['phone'], PhoneValidator::class, 'country' => 'US']
+// Input: '2125551234' 
+// Output: '+1 212 555 1234'
+```
+
+### Non-Strict Mode
+```php
+[['phone'], PhoneValidator::class, 'strict' => false]
+// Validates only if country is available
+```
+
+## Requirements
+
+- PHP 8.1+
+- Yii2 2.0.40+  
+- giggsey/libphonenumber-for-php ^8.13
+
+## Testing
+
+Follow [Yii2 Extension Testing Guidelines](https://www.yiiframework.com/doc/guide/2.0/en/structure-extensions#testing):
+
+```bash
+vendor/bin/phpunit
+vendor/bin/phpstan analyse  
+vendor/bin/phpcs --standard=PSR12 src/
+```
+
+## License
+
+MIT License. See [LICENSE](LICENSE) file.

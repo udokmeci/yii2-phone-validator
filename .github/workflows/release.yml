@@ -1,0 +1,81 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    name: Create Release
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, intl
+    
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress --no-dev
+    
+    - name: Run tests before release
+      run: |
+        composer install --dev
+        vendor/bin/phpunit
+        vendor/bin/phpstan analyse
+    
+    - name: Get tag version
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+    
+    - name: Extract changelog for this version
+      id: changelog
+      run: |
+        VERSION=${{ steps.get_version.outputs.VERSION }}
+        # Extract changelog section for this version
+        awk "/^## \[${VERSION#v}\]/,/^## \[/{
+          if(/^## \[${VERSION#v}\]/) p=1; 
+          else if(/^## \[/ && p) exit; 
+          if(p) print
+        }" CHANGELOG.md > release_notes.md
+        
+        # If no specific version found, use the latest unreleased section
+        if [ ! -s release_notes.md ]; then
+          awk "/^## \[Unreleased\]/,/^## \[/{
+            if(/^## \[Unreleased\]/) p=1; 
+            else if(/^## \[/ && p) exit; 
+            if(p) print
+          }" CHANGELOG.md > release_notes.md
+        fi
+        
+        echo "Release notes created"
+        cat release_notes.md
+    
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.get_version.outputs.VERSION }}
+        name: Release ${{ steps.get_version.outputs.VERSION }}
+        body_path: release_notes.md
+        draft: false
+        prerelease: false
+
+  packagist:
+    needs: release
+    runs-on: ubuntu-latest
+    name: Update Packagist
+    
+    steps:
+    - name: Update Packagist package
+      run: |
+        curl -XPOST \
+          -H 'content-type:application/json' \
+          'https://packagist.org/api/update-package?username=${{ secrets.PACKAGIST_USERNAME }}&apiToken=${{ secrets.PACKAGIST_TOKEN }}' \
+          -d '{"repository":{"url":"https://packagist.org/packages/udokmeci/yii2-phone-validator"}}'
+      continue-on-error: true
