@@ -12,7 +12,7 @@ jobs:
     name: Code Quality Checks
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
@@ -43,7 +43,7 @@ jobs:
     name: Documentation Check
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     
     - name: Check for broken links in docs
       run: |
@@ -68,7 +68,7 @@ jobs:
     name: Dependency Analysis
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     
     - name: Setup PHP
       uses: shivammathur/setup-php@v2
