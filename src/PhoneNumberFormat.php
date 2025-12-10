@@ -46,11 +46,17 @@ enum PhoneNumberFormat: int
      */
     public function toLibPhoneNumberFormat(): int
     {
-        return match ($this) {
-            self::E164 => LibPhoneNumberFormat::E164,
-            self::INTERNATIONAL => LibPhoneNumberFormat::INTERNATIONAL,
-            self::NATIONAL => LibPhoneNumberFormat::NATIONAL,
-            self::RFC3966 => LibPhoneNumberFormat::RFC3966,
-        };
+        switch ($this) {
+            case self::E164:
+                return LibPhoneNumberFormat::E164;
+            case self::INTERNATIONAL:
+                return LibPhoneNumberFormat::INTERNATIONAL;
+            case self::NATIONAL:
+                return LibPhoneNumberFormat::NATIONAL;
+            case self::RFC3966:
+                return LibPhoneNumberFormat::RFC3966;
+            default:
+                throw new \InvalidArgumentException('Invalid phone number format');
+        }
     }
 }
