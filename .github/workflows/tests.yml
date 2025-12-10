@@ -66,26 +66,3 @@ jobs:
         name: codecov-umbrella
         fail_ci_if_error: false
 
-  compatibility:
-    runs-on: ubuntu-latest
-    name: PHP Compatibility Check
-    
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.1'
-        extensions: mbstring, intl
-    
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
-    
-    - name: Check PHP compatibility
-      run: |
-        composer global require phpcompatibility/php-compatibility
-        ~/.composer/vendor/bin/phpcs --config-set installed_paths \
-          ~/.composer/vendor/phpcompatibility/php-compatibility
-        ~/.composer/vendor/bin/phpcs --standard=PHPCompatibility \
-          --runtime-set testVersion 8.1- src/

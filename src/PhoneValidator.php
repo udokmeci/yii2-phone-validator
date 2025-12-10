@@ -50,7 +50,9 @@ class PhoneValidator extends Validator
             $numberProto = $phoneUtil->parse($model->$attribute, $country);
             if ($phoneUtil->isValidNumber($numberProto)) {
                 if ($this->format !== false) {
-                    $formatValue = $this->format instanceof PhoneNumberFormat ? $this->format->toLibPhoneNumberFormat() : $this->format;
+                    $formatValue = $this->format instanceof PhoneNumberFormat
+                        ? $this->format->toLibPhoneNumberFormat()
+                        : $this->format;
                     if (is_int($formatValue)) {
                         $model->$attribute = $phoneUtil->format($numberProto, $formatValue);
                     }
