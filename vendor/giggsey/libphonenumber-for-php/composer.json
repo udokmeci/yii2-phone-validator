@@ -1,0 +1,91 @@
+{
+  "name": "giggsey/libphonenumber-for-php",
+  "type": "library",
+  "description": "PHP Port of Google's libphonenumber",
+  "keywords": [
+    "phonenumber",
+    "libphonenumber",
+    "mobile",
+    "validation",
+    "geocoding",
+    "geolocation"
+  ],
+  "homepage": "https://github.com/giggsey/libphonenumber-for-php",
+  "license": "Apache-2.0",
+  "support": {
+    "source": "https://github.com/giggsey/libphonenumber-for-php",
+    "issues": "https://github.com/giggsey/libphonenumber-for-php/issues"
+  },
+  "authors": [
+    {
+      "name": "Joshua Gigg",
+      "email": "giggsey@gmail.com",
+      "homepage": "https://giggsey.com/"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "libphonenumber\\": "src/"
+    },
+    "exclude-from-classmap": [
+        "/src/data/",
+        "/src/carrier/data/",
+        "/src/geocoding/data/",
+        "/src/timezone/data/"
+    ]
+
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "libphonenumber\\buildtools\\": "build/",
+      "libphonenumber\\Tests\\": "tests/"
+    }
+  },
+  "archive": {
+    "exclude": [
+      "build/",
+      "docs/",
+      "tests/",
+      ".github/",
+      ".editorconfig",
+      ".gitattributes",
+      ".gitignore",
+      ".styleci.yml",
+      ".travis.yml",
+      "build.xml",
+      "libphonenumber-for-php.spec",
+      "phpunit.xml.dist",
+      "phpunit",
+      "src/CountryCodeToRegionCodeMapForTesting.php"
+    ]
+  },
+  "require": {
+    "php": "^7.4|^8.0",
+    "giggsey/locale": "^2.0",
+    "symfony/polyfill-mbstring": "^1.17"
+  },
+  "require-dev": {
+    "phing/phing": "^3.0",
+    "pear/versioncontrol_git": "^0.7",
+    "pear/pear-core-minimal": "^1.10",
+    "pear/pear_exception": "^1.0",
+    "phpunit/phpunit": "^9.6",
+    "symfony/console": "^v5.2",
+    "symfony/var-exporter": "^5.2",
+    "php-coveralls/php-coveralls": "^2.0",
+    "friendsofphp/php-cs-fixer": "^3.64"
+  },
+  "replace": {
+    "giggsey/libphonenumber-for-php-lite": "self.version"
+  },
+  "extra": {
+    "branch-alias": {
+      "dev-master": "8.x-dev"
+    }
+  },
+  "scripts": {
+    "cs": "vendor/bin/php-cs-fixer fix",
+    "test": "vendor/bin/phpunit",
+    "metadata": "vendor/bin/phing compile"
+  }
+}
