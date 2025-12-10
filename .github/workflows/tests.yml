@@ -59,7 +59,7 @@ jobs:
     
     - name: Upload coverage to Codecov
       if: matrix.php-version == '8.1' && matrix.yii-version == '~2.0.51'
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v5
       with:
         file: ./coverage.xml
         flags: unittests
