@@ -19,7 +19,7 @@ jobs:
       with:
         php-version: '8.1'
         extensions: mbstring, intl
-        tools: composer
+        tools: composer, composer-normalize
     
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
