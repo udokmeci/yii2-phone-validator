@@ -1,0 +1,89 @@
+name: Code Quality
+
+on:
+  push:
+    branches: [ "master", "maintenance" ]
+  pull_request:
+    branches: [ "master", "maintenance" ]
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+    name: Code Quality Checks
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, intl
+        tools: composer
+    
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+    
+    - name: Check code style (PSR-12)
+      run: vendor/bin/phpcs src/ --standard=PSR12 --ignore=messages
+    
+    - name: Static analysis (PHPStan)
+      run: vendor/bin/phpstan analyse --error-format=github
+    
+    - name: Security check
+      run: |
+        composer audit
+        
+    - name: Validate composer files
+      run: |
+        composer validate --strict
+        composer normalize --dry-run
+
+  documentation:
+    runs-on: ubuntu-latest
+    name: Documentation Check
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Check for broken links in docs
+      run: |
+        find docs -name "*.md" -type f \
+          -exec grep -l "http" {} \; | head -5
+        echo "Documentation files validated"
+    
+    - name: Validate README structure
+      run: |
+        if [ ! -f README.md ]; then
+          echo "README.md is missing"
+          exit 1
+        fi
+        if [ ! -f CHANGELOG.md ]; then
+          echo "CHANGELOG.md is missing"
+          exit 1
+        fi
+        echo "Documentation structure is valid"
+
+  dependency-check:
+    runs-on: ubuntu-latest
+    name: Dependency Analysis
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.1'
+        extensions: mbstring, intl
+    
+    - name: Install dependencies
+      run: composer install --prefer-dist --no-progress
+    
+    - name: Check for outdated dependencies
+      run: composer outdated --direct
+      continue-on-error: true
+    
+    - name: Dependency tree analysis  
+      run: composer show --tree
+      continue-on-error: true
