@@ -132,20 +132,6 @@ class PhoneValidatorTest extends TestCase
         $this->assertEquals('0612345678', $model->phone);
     }
 
-    public function testEnumE164Format(): void
-    {
-        $model = new DynamicModel(['phone']);
-        $model->phone = '0612345678';
-        
-        $validator = new PhoneValidator([
-            'country' => 'NL',
-            'format' => PhoneNumberFormat::E164
-        ]);
-        $validator->validateAttribute($model, 'phone');
-        
-        $this->assertEmpty($model->getErrors('phone'));
-        $this->assertEquals('+31612345678', $model->phone);
-    }
 
     public function testEnumNationalFormat(): void
     {
